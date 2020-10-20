@@ -8,7 +8,7 @@ This repository contains bash codes to coregister digital elevation models to a 
 ## Subdirectories
 Trad_Machine = codes set  to run on conventional linux machines 
 
-Supercomputer = codes designed to run on the RMACC summit supercomputer
+RMACC_summit_scripts  = codes designed to run on the RMACC summit supercomputer
 
 ## Dependencies
 Codes require installation of: 
