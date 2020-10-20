@@ -26,8 +26,9 @@ CSVPROJECTION='+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +d
 #set the format of the point cloud file (x,y,z)
 CSVFORMAT='1:easting 2:northing 3:height_above_datum'
 
+DEM_NAME_ENDING='dem_8m.tif'
 # list all of the dems to text file named 'list'
-ls *dem_8m.tif > list
+ls ${DEM_NAME_ENDING} > list
 
 #for each file in list run pc_align 
 #produces a new subdirectory called CORRECTED_point_cloud_name, within this are the output files from the pc_align algorithm.
@@ -52,7 +53,7 @@ ls *trans*.tif | cut -d"_" -f3-5 > trans_list
 # for each file in this trans_list (roots of successful files) copy the relavent pc_align files and the orginal dems to the translated file directory for transformation.
 for file in $(cat trans_list) ; do
     cp *${file}*pc_align* TRANSLATED_${PC_NAME}
-    cp ../${file}*8m.tif TRANSLATED_${PC_NAME}
+    cp ../${file}*${DEM_NAME_ENDING} TRANSLATED_${PC_NAME}
 done
     
 #move into translated directory
@@ -82,7 +83,7 @@ rm *trans_30m_uc.tif
 #remove uncompressed native resolution files
 rm *trans.tif
 #remove the copied uncoregistered 8m dems 
-rm *8m.tif 
+rm *${DEM_NAME_ENDING} 
 
 #move the pc_align files to their own subdirectory
 mkdir pc_align_files
