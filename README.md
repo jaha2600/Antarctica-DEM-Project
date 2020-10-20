@@ -8,7 +8,7 @@ This repository contains bash codes to coregister digital elevation models to a 
 Detailed instructions in each subdirectory README file.
 
 ## Subdirectories
-standard_scripts = codes set  to run on conventional linux machines 
+standard_scripts = codes set  to run on conventional machines with a bash shell
 
 RMACC_summit_scripts  = codes designed to run on the RMACC summit supercomputer
 
