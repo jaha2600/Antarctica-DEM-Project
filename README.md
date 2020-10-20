@@ -5,6 +5,8 @@ Codes to coregister digital elevation models to point clouds.
 
 This repository contains bash codes to coregister digital elevation models to a reference point cloud.
 
+Detailed instructions in each subdirectory README file.
+
 ## Subdirectories
 Trad_Machine = codes set  to run on conventional linux machines 
 
