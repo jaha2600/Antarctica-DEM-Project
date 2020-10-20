@@ -16,9 +16,9 @@ Change `line 29` to ensure `$DEM_NAME_ENDING` matches your file endings (used fo
 
 ## Usage
 
-`./coregister_dems.sh example_point_cloud.csv`
+`$ ./coregister_dems.sh example_point_cloud.csv`
 
-Key steps:
+Key steps in code:
 
 Generate lists of DEMs
 
