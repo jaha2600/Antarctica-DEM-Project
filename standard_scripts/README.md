@@ -15,10 +15,15 @@ Change `line 29` to ensure `$DEM_NAME_ENDING` matches your file endings (used fo
 
 
 Key steps:
+
 Generate lists of DEMs
+
 For each DEM run pc_align code to generate transform
+
 Copy pc_align.txt files of succesful pc_align runs to new subdirectory
+
 Apply inverse transform from pc_align textfile on DEMs
+
 Main Outputs:
 - Translated DEMs at native resolution (located in `/dem_dir/CORRECTED_${PC_NAME}/TRANSLATED_${PC_NAME})`
 - Translated DEMs at 30 m resolution (located in `/dem_dir/CORRECTED_${PC_NAME}/TRANSLATED_${PC_NAME/30m})`
