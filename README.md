@@ -22,3 +22,5 @@ Codes require installation of:
   - copy this script to the same location as the original apply_dem_translation.py script in demcoreg installation
   - i.e. /location_of_demcoreg_install/demcoreg/demcoreg/
 
+If used in publication please reference github repo https://github.com/jaha2600/coreg_dems 
+Jasmine Hansen, 2020
