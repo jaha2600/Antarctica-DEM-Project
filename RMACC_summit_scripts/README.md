@@ -23,3 +23,37 @@ For example:
 ```
 /scratch/summit/jaha2600/point_clouds/
 ```
+#### Files `genjobs.input`, `generate_jobs.sh`, `template_file_auto.txt` should be placed in
+```
+/projects/jaha2600/demcoregister/
+```
+
+#### Copy `apply_dem_inv_translation.py` to location of demcoreg files, in my case
+```
+/projects/jaha2600/software/anaconda/envs/pygeo/lib/python2.7/site-packages/demcoreg/
+```
+### Once all files are in the correct location make following changes to files to specify your usernames / paths etc:
+#### `template_file_auto.txt`
+`Lines 1 - 12` edit to required number of tasks, account, walltime (note does not currently support multiple nodes - leave at 1)
+
+`Line 18` path to copy of ASP
+
+`Line 21` path to demcoreg apply inverset translation code
+
+`line 24` change to proj string for csv file
+
+`line 36` change path to dem directory above year to correct path (i.e. `/scratch/summitjaha2600/antarctica_dems/`)
+
+`line 37` edit to match ending of dem file - for worldview dems this is normally `*dem.tif`
+
+`line 55` same as above edit to match ending of dem files normally `*dem.tif`
+
+`line 77` same as above edit to ending of files `*dem.tif`
+#### `generate_jobs.sh`
+`lines 1 - 20` edit to required number of tasks, account, walltime (keep low)
+
+`lines 33 & 36` edit to path of the genjobs.input file (keep `| cut -d" " -f1/2` unedited)
+
+`lines 39` edit to location of `template_file_auto.txt`
+
+`line 43` change path to location of generate_jobs.sh etc. scripts, then add `/jobfiles/` onto the end i.e. `/projects/jaha2600/demcoregister/jobfiles/`
