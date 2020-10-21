@@ -95,7 +95,7 @@ mv pc_align_files ../
 mkdir 30m_coreg 
 mv *trans_30m.tif 30m_coreg/
 
-mkdir coreg_dems
+mkdir coreg
 mv *tran.tif coreg/
 
 echo "Script Complete"
