@@ -1,5 +1,3 @@
-#!/bin/bash
-
 ###### Code written by Jasmine Hansen 2020 ##########
 ###### Built on origincal code by Michael Willis ###########
 ###### If used in publication please reference github repo: https://github.com/jaha2600/coreg_dems/ ##########
@@ -28,7 +26,7 @@ CSVFORMAT='1:easting 2:northing 3:height_above_datum'
 
 DEM_NAME_ENDING='dem_8m.tif'
 # list all of the dems to text file named 'list'
-ls ${DEM_NAME_ENDING} > list
+ls *${DEM_NAME_ENDING} > list
 
 #for each file in list run pc_align 
 #produces a new subdirectory called CORRECTED_point_cloud_name, within this are the output files from the pc_align algorithm.
@@ -48,23 +46,26 @@ cd CORRECTED_${PC_NAME}/
 mkdir TRANSLATED_${PC_NAME}/
 # list the trans reference.tif files which will show which files the pc_align algorithm was successful on
 # save only the root of the file (i.e. file id, date, satellite, segment number etc.)
-ls *trans*.tif | cut -d"_" -f3-5 > trans_list
 
-# for each file in this trans_list (roots of successful files) copy the relavent pc_align files and the orginal dems to the translated file directory for transformation.
-for file in $(cat trans_list) ; do
-    cp *${file}*pc_align* TRANSLATED_${PC_NAME}
-    cp ../${file}*${DEM_NAME_ENDING} TRANSLATED_${PC_NAME}
+ls *trans_reference.tif | cut -d"." -f1 > trans_list
+cat trans_list | cut -d"_" -f1-5 > trans_root_list
+
+mkdir successful
+
+#copy all the successful dem 8m files to corrected subdirectory
+for file_root in $(cat trans_root_list) ; do
+        
+    cp ../${file_root}_*8m.tif ./successful
+        
+    cp ${file_root}*-log-pc_align*.txt ./successful
 done
-    
-#move into translated directory
-cd TRANSLATED_${PC_NAME}
 
-# list all the pc_align files
-ls *pc_align* > pc_align_files
+cd successful
+    
 
 # for each pc align file run apply_dem_translation.py 
 #this takes the inverse transform from the pc align file and applies it
-for infile in $(cat pc_align_files) ; do
+for infile in $(ls *pc_align*) ; do
 	echo "operating on " $infile
 	dem_root=$(echo $infile | cut -d"-" -f1) 
 	dem_filename=${dem_root}.tif
@@ -87,11 +88,14 @@ rm *${DEM_NAME_ENDING}
 
 #move the pc_align files to their own subdirectory
 mkdir pc_align_files
-mv *pc_align* pc_align_files/
+mv *pc_align*txt pc_align_files/
 #move this subdirectory up one level to CORRECTED_point_cloud_name
 mv pc_align_files ../
 
-mkdir 30m 
-mv *trans_30m.tif 30m/
+mkdir 30m_coreg 
+mv *trans_30m.tif 30m_coreg/
+
+mkdir coreg_dems
+mv *tran.tif coreg/
 
 echo "Script Complete"
