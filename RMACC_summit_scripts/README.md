@@ -2,10 +2,39 @@
 
 Batch processing scripts designed to be used with the RMACC Summit supercomputer system.
 
+Primarily used when testing multiple pointclouds, produces batch scripts for every pointcloud for a certain year.
+
+Can be edited to produce different jobfiles i.e. one job for every dem.
+
 These codes are designed to automatically generate jobfiles that then coregister DEMs to point clouds using Ames Stereo Pipeline and the `demcoreg` package.
 
 ## Dependencies
 Requires same dependencies as on main coreg_dems page - ask rc computing at CU Boulder for installation of pygeotools and demcoreg. 
+
+## Usage
+1. move all files to correct locations detailed in File Locations Section
+2. make edits to `template_file_auto.txt` and `generate_jobs.sh files` (changing users, slurm commands, paths, dems endings)
+- only needs to be done once if same structure / naming conventions is maintained for multiple jobs
+3. edit `genjobs.input` file, format is two column file with space as delimiter:
+```
+/path/to/pointcloud/ year
+For Example:
+/scratch/summit/jaha2600/pc_align_point_clouds/ 2011
+```
+4. log into scompile node if you haven't already `ssh scompile`
+5. move to directory with genjobs.input etc in and run `generate_jobs.sh`. This produces a subdirectory called jobfiles, inside of which are multiple qsub files, currently set up as one for each pointcloud in the year specified. If you are using one point cloud you will have one qsub file.
+```
+sbatch generate_jobs.sh
+
+in ./jobfiles can find qsub* files for each pointcloud for the year specified.
+i.e. qsub*point_cloud_1_2011.sh
+```
+6. move to `jobfiles` subdirectory 
+7. Run the qsub file - this is the script that runs in a loop for every dem in the directory of the year specified run coregistration routine, produce translated files and resampled coregistered files. 
+```
+sbatch qsub*.sh
+```
+
 
 ## File locations
 #### All DEM files are stored in the scratch seperated into one directory for each year i.e.:
@@ -42,7 +71,7 @@ For example:
 
 `line 24` change to proj string for csv file
 
-`line 36` change path to dem directory above year to correct path (i.e. `/scratch/summitjaha2600/antarctica_dems/`)
+`line 36` change path to dem directory above year to correct path (i.e. `/scratch/summit/jaha2600/antarctica_dems/`)
 
 `line 37` edit to match ending of dem file - for worldview dems this is normally `*dem.tif`
 
