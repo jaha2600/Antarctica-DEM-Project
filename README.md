@@ -26,5 +26,6 @@ Codes require installation of:
 
 If used in publication please reference github repo https://github.com/jaha2600/coreg_dems 
 
+and follow reference requirements from demcoreg/pygeotools repositories.
 
 Jasmine Hansen, 2020
