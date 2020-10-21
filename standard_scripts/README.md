@@ -18,6 +18,7 @@ Change `line 29` to ensure `$DEM_NAME_ENDING` matches your file endings (used fo
 - for most produced WV dems this is normally dem.tif
 
 ## Usage
+Run in directory which contains DEMs to coregister. 
 
 `$ ./coregister_dems.sh example_point_cloud_name`
 
