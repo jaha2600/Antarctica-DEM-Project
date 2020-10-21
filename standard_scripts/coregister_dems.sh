@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ###### Code written by Jasmine Hansen 2020 ##########
 ###### Built on origincal code by Michael Willis ###########
 ###### If used in publication please reference github repo: https://github.com/jaha2600/coreg_dems/ ##########
@@ -71,19 +73,12 @@ for infile in $(ls *pc_align*) ; do
 	dem_filename=${dem_root}.tif
 	dem_filename_shean=${dem_root}_trans.tif
 	python ${CODE} ${dem_filename} ${infile} 
-#compress the dems
-        gdal_translate -co "COMPRESS=LZW" ${dem_filename_shean} ${dem_root}_tran.tif
 
 # resample the dem to 30m for visualization purposes.
-	gdalwarp -tr 30 30 -r bilinear ${dem_root}_tran.tif ${dem_root}_trans_30m_uc.tif 
-#compress the 30m dems.
-	gdal_translate -co "COMPRESS=LZW" ${dem_root}_trans_30m_uc.tif ${dem_root}_trans_30m.tif
+	gdalwarp -tr 30 30 -r bilinear ${dem_root}_trans.tif ${dem_root}_trans_30m.tif 
+
 done 
-#remove uncompressed 30m files
-rm *trans_30m_uc.tif
-#remove uncompressed native resolution files
-rm *trans.tif
-#remove the copied uncoregistered 8m dems 
+
 rm *${DEM_NAME_ENDING} 
 
 #move the pc_align files to their own subdirectory
@@ -96,6 +91,6 @@ mkdir 30m_coreg
 mv *trans_30m.tif 30m_coreg/
 
 mkdir coreg
-mv *tran.tif coreg/
+mv *trans.tif coreg/
 
 echo "Script Complete"
