@@ -30,11 +30,17 @@ in ./jobfiles can find qsub* files for each pointcloud for the year specified.
 i.e. qsub*point_cloud_1_2011.sh
 ```
 6. move to `jobfiles` subdirectory 
-7. Run the qsub file - this is the script that runs in a loop for every dem in the directory of the year specified run coregistration routine, produce translated files and resampled coregistered files. 
+7. Run the qsub file - this is the script that runs in a loop for every dem in the directory of the year specified. For each dem run the coregistration routine, produce translated file and resampled coregistered file. 
 ```
 sbatch qsub*.sh
 ```
 
+## Key Outputs
+The qsub script produces multiple outputs.
+Key outputs are stored in the following locations:
+
+Translated DEMs = `/scratch/summit/jaha2600/dempath/year/CORRECTED_*/successful/translated/`
+Translated 30m DEMs = `/scratch/summit/jaha2600/dempath/year/CORRECTED_*/successful/translated/30m/`
 
 ## File locations
 #### All DEM files are stored in the scratch seperated into one directory for each year i.e.:
