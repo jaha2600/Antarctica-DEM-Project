@@ -8,7 +8,7 @@
 # coregister_dems.sh pointcloud_name
 #set up for the WorldView  DEMs with the FOLLOWING NAME STRUCTURE:
 
-#20101116_WV02_1030010007A8AB00_1030010008813A00_seg2_dem_8m.tif
+#20101116_WV02_1030010007A8AB00_1030010008813A00_seg2_dem.tif
 
 #path to ASP and demcoreg
 ASP_CODE=/home/jasmine/Applications/StereoPipeline-2.6.0-2017-06-01-x86_64-Linux/bin/
