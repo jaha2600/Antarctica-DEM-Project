@@ -16,7 +16,9 @@ Change `line 29` to ensure `$DEM_NAME_ENDING` matches your file endings (used fo
 
 ## Usage
 
-`$ ./coregister_dems.sh example_point_cloud.csv`
+`$ ./coregister_dems.sh example_point_cloud_name`
+
+Do not add .csv extension onto end of example_point_cloud_name
 
 Key steps in code:
 
