@@ -31,8 +31,8 @@ Copy pc_align.txt files of succesful pc_align runs to new subdirectory
 Apply inverse transform from pc_align textfile on DEMs
 
 Main Outputs:
-- Translated DEMs at native resolution (located in `/dem_dir/CORRECTED_${PC_NAME}/TRANSLATED_${PC_NAME})`
-- Translated DEMs at 30 m resolution (located in `/dem_dir/CORRECTED_${PC_NAME}/TRANSLATED_${PC_NAME/30m})`
+- Translated DEMs at native resolution (located in `/dem_dir/CORRECTED_${PC_NAME}/successful/coreg/`)
+- Translated DEMs at 30 m resolution (located in `/dem_dir/CORRECTED_${PC_NAME}/successful/coreg_30m`)
 
 If used in publication please reference github repo & author https://github.com/jaha2600/coreg_dems 
 
