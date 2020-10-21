@@ -4,6 +4,9 @@ This code is designed to work in any standard bash shell.
 See main directory for dependency requirements.
 
 ## Make Edits to Paths & Hardcoded Variables
+
+First make sure you have copied the apply_inv_translation.py script into your demcoreg_directory 
+
 Change `line 14` and `line 15` to match your ASP path and location of apply_inv_translation.py
 
 Change `line 21` to hardcode the path to your `$PC_NAME` input.
