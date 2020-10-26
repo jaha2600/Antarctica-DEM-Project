@@ -1,5 +1,9 @@
 #! /usr/bin/env python
 
+#edited by Jasmine Hansen 2020#
+
+#add flag to have custom endings on *trans.tif files 
+
 #David Shean
 #dshean@gmail.com
 
@@ -35,7 +39,10 @@ def getparser():
     parser = argparse.ArgumentParser(description="Apply existing pc_align translation to a DEM")
     parser.add_argument('dem_fn', type=str, help='DEM filename')
     parser.add_argument('log_fn', type=str, help='pc_align log filename')
+    #added by jhansen, 2020
+    parser.add_argument('file_end', type=str, help='assign ending of outfile, will be followed by _trans. i.e. file_end = run: *run_10_trans.tif')
     parser.add_argument('-outdir', default=None, help='Output directory')
+    
     return parser
 
 def main():
@@ -44,12 +51,15 @@ def main():
   
     dem_fn = args.dem_fn
     log_fn = args.log_fn
+    outfile_end = args.file_end
     outdir = args.outdir
 
     if not iolib.fn_check(dem_fn): 
         sys.exit("Unable to find input DEM: %s" % dem_fn)
     if not iolib.fn_check(log_fn):
         sys.exit("Unable to find input log: %s" % log_fn)
+    if outfile_end is None:
+        sys.exit("Add ending to filename")
     if outdir is not None:
         if not iolib.fn_check(outdir):
             os.makedirs(outdir)
@@ -146,7 +156,8 @@ def main():
 
     #out_fmt = "VRT"
     out_fmt = "TIF"
-    out_fn = os.path.join(outdir, os.path.split(os.path.splitext(dem_fn)[0])[1] + '_trans')
+    #edited by jhansen, 2020 to add outfile_end
+    out_fn = os.path.join(outdir, os.path.split(os.path.splitext(dem_fn)[0])[1] + '_' + outfile_end + '_trans')
     if out_fmt == "VRT": 
         print("Writing vrt with scaled values")
         dst_fn = out_fn+'.vrt'
