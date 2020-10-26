@@ -7,15 +7,17 @@ See main directory for dependency requirements.
 
 First make sure you have copied the apply_inv_translation.py script into your demcoreg_directory 
 
-Change `line 14` and `line 15` to match your ASP path and location of apply_inv_translation.py
+Change `line 14` and `line 17` to match your ASP path and location of apply_inv_translation.py
 
-Change `line 21` to hardcode the path to your `$PC_NAME` input.
+Change `line 22` to hardcode the path to your `$PC_NAME` input.
 
-Change `line 24` to proj string that matches the projection of your input point cloud file
+Change `line 25` to proj string that matches the projection of your input point cloud file
 - see example of point cloud format in file `example_point_cloud.csv`
 
-Change `line 29` to ensure `$DEM_NAME_ENDING` matches your file endings (used for wildcards)
+Change `line 30` to ensure `$DEM_NAME_ENDING` matches your file endings (used for wildcards)
 - for most produced WV dems this is normally dem.tif
+
+Change `line 32` to the dem directory path **** without the end slash ****
 
 ## Usage
 Run in directory which contains DEMs to coregister. 
@@ -35,8 +37,7 @@ Copy pc_align.txt files of succesful pc_align runs to new subdirectory
 Apply inverse transform from pc_align textfile on DEMs
 
 Main Outputs:
-- Translated DEMs at native resolution (located in `/dem_dir/CORRECTED_${PC_NAME}/successful/coreg/`)
-- Translated DEMs at 30 m resolution (located in `/dem_dir/CORRECTED_${PC_NAME}/successful/coreg_30m`)
+- Translated DEMs located in `/dem_dir/CORRECTED_DEMS/point_cloud_name`
 
 If used in publication please reference github repo & author https://github.com/jaha2600/coreg_dems 
 
