@@ -11,14 +11,15 @@
 #20101116_WV02_1030010007A8AB00_1030010008813A00_seg2_dem_8m.tif
 
 #path to ASP and demcoreg
-ASP_CODE=/home/jasmine/Applications/StereoPipeline-2.6.0-2017-06-01-x86_64-Linux/bin/
-CODE=/home/jasmine/Applications/demcoreg/demcoreg/apply_dem_inv_translation.py
-
+#ASP_CODE=/home/jasmine/Applications/StereoPipeline-2.6.0-2017-06-01-x86_64-Linux/bin/
+ASP_CODE=/usr/local/StereoPipeline/bin/
+#CODE=/home/jasmine/Applications/demcoreg/demcoreg/apply_dem_inv_translation.py
+CODE=/home/jhansen/demcoreg/apply_dem_inv_translation.py
 #the first argument in the command line is the name of the pointcloud you are using
 PC_NAME=$1
 
 # hardcode the path in and add filename, good if want to run with multiple pointclouds.
-CSVDATA=/data/ANTARCTICA/DATASETS/GEE_MASKS/${PC_NAME}.csv
+CSVDATA=/home/jhansen/2020/point_clouds/${PC_NAME}.csv
 
 # state the projection of the point cloud (string below is for EPSG:3031)
 CSVPROJECTION='+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs'
@@ -27,6 +28,12 @@ CSVPROJECTION='+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +d
 CSVFORMAT='1:easting 2:northing 3:height_above_datum'
 
 DEM_NAME_ENDING='dem_8m.tif'
+
+DEM_PATH=/BhaltosMount/Bhaltos/ANTARCTICA/2020_jh_dems/2011/test_files
+
+#move to dem_directory
+cd ${DEM_PATH}
+
 # list all of the dems to text file named 'list'
 ls *${DEM_NAME_ENDING} > list
 
@@ -40,63 +47,57 @@ for file in $(cat list) ; do
    ${ASPCODE}pc_align --max-displacement 50 --tif-compress=NONE --save-inv-transformed-reference-points --threads 32 -o CORRECTED_${PC_NAME}/${name} --csv-proj4 "$CSVPROJECTION" --csv-format "$CSVFORMAT" ${file} $CSVDATA
 done 
 
-
-# copy all the successful pc align files to the main directory
-#move into subdirectory with pc_align files in
-cd CORRECTED_${PC_NAME}/
-# make a new subdirectory for the end result: translated dems.
-mkdir TRANSLATED_${PC_NAME}/
+cd ${DEM_PATH}/CORRECTED_${PC_NAME}/
 # list the trans reference.tif files which will show which files the pc_align algorithm was successful on
 # save only the root of the file (i.e. file id, date, satellite, segment number etc.)
 
 ls *trans_reference.tif | cut -d"." -f1 > trans_list
 cat trans_list | cut -d"_" -f1-5 > trans_root_list
 
-mkdir successful
+#check there is no existing pc_align list and if there is remove it, otherwise it just appends the new ones to the bottom
 
-#copy all the successful dem 8m files to corrected subdirectory
+rm pc_file_list_${PC_NAME}
+
+#list pc_align files for successful pc_align runs
 for file_root in $(cat trans_root_list) ; do
-        
-    cp ../${file_root}_*8m.tif ./successful
-        
-    cp ${file_root}*-log-pc_align*.txt ./successful
+    ls $PWD/${file_root}*pc_align-*.txt >> pc_file_list_${PC_NAME}
+    cp pc_file_list_${PC_NAME} ${DEM_PATH}
+
 done
 
-cd successful
-    
+#move to main directory
+cd ${DEM_PATH}
 
 # for each pc align file run apply_dem_translation.py 
 #this takes the inverse transform from the pc align file and applies it
-for infile in $(ls *pc_align*) ; do
+for infile in $(cat pc_file_list_${PC_NAME}) ; do
 	echo "operating on " $infile
-	dem_root=$(echo $infile | cut -d"-" -f1) 
+	filename=$(echo $infile | awk -F/ '{print $NF}')
+	dem_root=$(echo $filename | cut -d"-" -f1) 
 	dem_filename=${dem_root}.tif
-	dem_filename_shean=${dem_root}_trans.tif
-	python ${CODE} ${dem_filename} ${infile} 
-
+	dem_filename_shean=${dem_root}_${PC_NAME}_trans.tif
+	python ${CODE} ${dem_filename} ${infile} ${PC_NAME}
 # resample the dem to 30m for visualization purposes.
-	gdalwarp -tr 30 30 -r bilinear ${dem_root}_trans.tif ${dem_root}_trans_30m.tif 
+	gdalwarp -tr 30 30 -r bilinear ${dem_filename_shean} ${dem_root}_${PC_NAME}_trans_30m.tif
 
 done 
 
-rm *${DEM_NAME_ENDING} 
+if [ ! -d "CORRECTED_DEMS" ] ; then
+	mkdir "CORRECTED_DEMS"
+fi
 
-#move the pc_align files to their own subdirectory
-mkdir pc_align_files
-mv *pc_align*txt pc_align_files/
-#move this subdirectory up one level to CORRECTED_point_cloud_name
-mv pc_align_files ../
+cd CORRECTED_DEMS
 
-mkdir 30m_coreg 
-mv *trans_30m.tif 30m_coreg/
+#make subdirectory to store dems
+#if [ ! -d $PC_NAME ] ; then
+#	mkdir "${PC_NAME}"
+#fi
 
-mkdir coreg
-mv *trans.tif coreg/
+#copy translated files to directory
+mv ${DEM_PATH}/*${PC_NAME}_trans*.tif ${DEM_PATH}/CORRECTED_DEMS/
 
-cd ..
-mkdir run_files
-mv *pc_align*.txt *transform.txt *trans_reference.tif *iterationInfo.csv *errors.csv *inverse-transform.txt run_files/
-rm trans_list
-rm trans_root_list
+#make subdirectory and move them to correct one
+mkdir ${PC_NAME}
+mv *${PC_NAME}_trans*.tif ${PC_NAME}
 
 echo "Script Complete"
