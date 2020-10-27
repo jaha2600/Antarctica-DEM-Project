@@ -41,11 +41,17 @@ ls *${DEM_NAME_ENDING} > list
 #produces a new subdirectory called CORRECTED_point_cloud_name, within this are the output files from the pc_align algorithm.
 #every pc_align run produces a *pc_align*.txt file, regardless of whether or not it was successful or not.
 #*trans_reference.tif files are ONLY produced if the pc_align run is successful
+echo "
+Stage 1 - Running pc_align
+"
 for file in $(cat list) ; do
-   echo "operating on " $file
+   echo "running pc_align on " $file
    name=$(echo $file | cut -d"." -f1)
    ${ASPCODE}pc_align --max-displacement 50 --tif-compress=NONE --save-inv-transformed-reference-points --threads 32 -o CORRECTED_${PC_NAME}/${name} --csv-proj4 "$CSVPROJECTION" --csv-format "$CSVFORMAT" ${file} $CSVDATA
 done 
+echo "
+Stage 1 Complete
+"
 
 cd ${DEM_PATH}/CORRECTED_${PC_NAME}/
 # list the trans reference.tif files which will show which files the pc_align algorithm was successful on
@@ -58,6 +64,8 @@ cat trans_list | cut -d"_" -f1-5 > trans_root_list
 
 rm pc_file_list_${PC_NAME}
 
+echo "Identifying Successful pc_align Runs"
+
 #list pc_align files for successful pc_align runs
 for file_root in $(cat trans_root_list) ; do
     ls $PWD/${file_root}*pc_align-*.txt >> pc_file_list_${PC_NAME}
@@ -68,20 +76,40 @@ done
 #move to main directory
 cd ${DEM_PATH}
 
+echo "
+Stage 2 - Applying Inverse Geotransform
+"
+
 # for each pc align file run apply_dem_translation.py 
 #this takes the inverse transform from the pc align file and applies it
 for infile in $(cat pc_file_list_${PC_NAME}) ; do
-	echo "operating on " $infile
+	echo "applying translation to " $infile
 	filename=$(echo $infile | awk -F/ '{print $NF}')
 	dem_root=$(echo $filename | cut -d"-" -f1) 
 	dem_filename=${dem_root}.tif
 	dem_filename_shean=${dem_root}_${PC_NAME}_trans.tif
 	python ${CODE} ${dem_filename} ${infile} ${PC_NAME}
 # resample the dem to 30m for visualization purposes.
-	gdalwarp -tr 30 30 -r bilinear ${dem_filename_shean} ${dem_root}_${PC_NAME}_trans_30m.tif
-
+	gdalwarp -tr 30 30 -r bilinear ${dem_filename_shean} ${dem_root}_${PC_NAME}_trans_30.tif
+        
+# run compression over the 30 m files        
+        gdal_translate -co "COMPRESS=LZW" -co bigtiff=if_safer ${dem_root}_${PC_NAME}_trans_30.tif ${dem_root}_${PC_NAME}_trans_30m.tif
+# run compression over the native res files
+        gdal_translate -co "COMPRESS=LZW" -co bigtiff=if_safer ${dem_root}_${PC_NAME}_trans.tif ${dem_root}_${PC_NAME}_tran.tif
 done 
+echo "
+Stage 2 Complete
+"
 
+#remove uncompressed_files
+rm *trans_30.tif
+rm *trans.tif
+
+#rename back to trans.tif 
+# check if this is spaces or slashes (redhat?)
+rename 's/tran.tif/trans.tif/' *tran.tif
+
+echo "Tidying Up and Moving Files"
 if [ ! -d "CORRECTED_DEMS" ] ; then
 	mkdir "CORRECTED_DEMS"
 fi
@@ -94,10 +122,16 @@ cd CORRECTED_DEMS
 #fi
 
 #copy translated files to directory
-mv ${DEM_PATH}/*${PC_NAME}_trans*.tif ${DEM_PATH}/CORRECTED_DEMS/
+mv ${DEM_PATH}/*${PC_NAME}_tran*.tif ${DEM_PATH}/CORRECTED_DEMS/
 
 #make subdirectory and move them to correct one
 mkdir ${PC_NAME}
-mv *${PC_NAME}_trans*.tif ${PC_NAME}
+mv *${PC_NAME}_tran*.tif ${PC_NAME}
 
-echo "Script Complete"
+echo "
+Script Complete
+"
+location_path=${DEM_PATH}/CORRECTED_DEMS/${PC_NAME}/
+
+echo "
+Translated DEMs are located in " $location_path
