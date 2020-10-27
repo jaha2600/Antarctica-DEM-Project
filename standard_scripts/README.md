@@ -39,6 +39,8 @@ Apply inverse transform from pc_align textfile on DEMs
 Main Outputs:
 - Translated DEMs located in `/dem_dir/CORRECTED_DEMS/point_cloud_name`
 
-If used in publication please reference github repo & author Jasmine Hansen https://github.com/jaha2600/coreg_dems and [demcoreg](https://github.com/dshean/demcoreg) & [pygeotools](https://github.com/dshean/pygeotools) repositories as per their requirements. 
+## Use in Publication
+If used in publication please credit Jasmine Hansen and github repo https://github.com/jaha2600/coreg_dems 
+and credit [demcoreg](https://github.com/dshean/demcoreg)/[pygeotools](https://github.com/dshean/pygeotools) repositories following their reference requirements.
 
 Jasmine Hansen, 2020
