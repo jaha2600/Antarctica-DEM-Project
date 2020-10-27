@@ -73,7 +73,7 @@ echo "== Stage 2 - Applying Inverse Geotransform =="
 for infile in $(cat pc_file_list_${PC_NAME}) ; do
        	echo "applying translation to " $infile
 	filename=$(echo $infile | awk -F/ '{print $NF}')
-       	dem_root=$(echo $infile | cut -d"-" -f1)
+       	dem_root=$(echo $filename| cut -d"-" -f1)
        	dem_filename=${dem_root}.tif
        	dem_filename_shean=${dem_root}_${PC_NAME}_trans.tif
 	python ${DEMCOREG_CODE} ${dem_filename} ${infile} ${PC_NAME}
