@@ -66,7 +66,7 @@ For example:
 3. edit `genjobs.input` file, format is four column file with space as delimiter:
 ```
 /path/to/pointcloud/ year dem_ending /path/to/dems/
-Make sure paths have trailing /. For Example:
+Make sure paths have trailing / For Example:
 /scratch/summit/jaha2600/pc_align_point_clouds/ 2011 dem.tif /scratch/summit/jaha2600/ant_dems_2020/
 ```
 4. log into scompile node if you haven't already `ssh scompile`
