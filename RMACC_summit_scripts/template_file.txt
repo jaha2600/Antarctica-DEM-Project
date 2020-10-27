@@ -35,7 +35,7 @@ DEM_LOC_ROOT=DEM_PATH
 CSVDATA=${PC_PATH}${PC_NAME}.csv
 CORRECTED_DIR="CORRECTED_${PC_NAME}"
 #make sure this path does not have the end slash.
-DEM_LOC_FINAL=${DEM_PATH_ROOT}${YEAR}
+DEM_LOC_FINAL=${DEM_LOC_ROOT}${YEAR}
 
 cd ${DEM_LOC_FINAL}
 
