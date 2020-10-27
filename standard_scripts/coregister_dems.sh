@@ -122,7 +122,7 @@ cd CORRECTED_DEMS
 #fi
 
 #copy translated files to directory
-mv ${DEM_PATH}/*${PC_NAME}_tran*.tif ${DEM_PATH}/CORRECTED_DEMS/
+mv ${DEM_PATH}/20*${PC_NAME}_tran*.tif ${DEM_PATH}/CORRECTED_DEMS/
 
 #make subdirectory and move them to correct one
 mkdir ${PC_NAME}
