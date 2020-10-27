@@ -93,3 +93,9 @@ These translated DEMs are located in `/path/to/main/dem/directory/year/CORRECTED
 ```
 i.e. /scratch/summit/jaha2600/ant_dems_2020/2011/CORRECTED_DEMS/rema_i01m10_all/
 ```
+
+## Use in Publication
+If used in publication please credit Jasmine Hansen and github repo https://github.com/jaha2600/coreg_dems 
+and credit [demcoreg](https://github.com/dshean/demcoreg)/[pygeotools](https://github.com/dshean/pygeotools) repositories following their reference requirements.
+
+Jasmine Hansen, 2020
