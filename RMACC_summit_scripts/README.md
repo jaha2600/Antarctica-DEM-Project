@@ -66,7 +66,7 @@ For example:
 - only needs to be done once if same structure / naming conventions is maintained for multiple jobs
 3. edit `genjobs.input` file, format is three column file with space as delimiter:
 ```
-/path/to/pointcloud/ year
+/path/to/pointcloud/ year dem_ending
 For Example:
 /scratch/summit/jaha2600/pc_align_point_clouds/ 2011 dem.tif
 ```
