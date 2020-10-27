@@ -1,0 +1,115 @@
+#!/bin/bash
+## select one node
+#SBATCH --nodes=1
+## select one core to do the job
+#SBATCH --ntasks=8
+## set shas partition
+#SBATCH --partition=shas
+## set condo for job? 
+#SBATCH  --account ucb-summit-mjw
+## set walltime
+#SBATCH --time=12:00:00
+## Import modules
+module purge
+source /curc/sw/anaconda/default
+conda activate pygeo
+
+#location of ASP code on supercomputer
+CODE=/projects/miwi7950/ASP/StereoPipeline-2.6.0-2017-06-01-x86_64-Linux/bin/
+#location of DEMCOREG code
+
+DEMCOREG_CODE=/projects/jaha2600/software/anaconda/envs/pygeo/lib/python2.7/site-packages/demcoreg/apply_dem_translation.py
+#location of reference CSV file
+
+CSVPROJECTION='+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs'
+CSVFORMAT='1:easting 2:northing 3:height_above_datum'
+
+#assigning variables from genjobs input script
+YEAR=YEARS
+PC_PATH=PC_PATH_NAME
+PC_NAME=PC_FILENAME
+DEM_NAME_ENDING=DEM_ENDING
+#combine to get the path and filename of the csv file of interest.
+CSVDATA=${PC_PATH}${PC_NAME}.csv
+CORRECTED_DIR="CORRECTED_${PC_NAME}"
+#make sure this path does not have the end slash.
+DEM_PATH=/scratch/summit/jaha2600/ant_dems_2020/${YEAR}
+
+cd ${DEM_PATH}
+
+ls *${DEM_NAME_ENDING} > list
+
+echo "== Stage 1 - Running pc_align =="
+	
+for file in $(cat list) ; do
+    echo "operating on" $file
+    name=$(echo $file | cut -d"." -f1)
+    ${CODE}pc_align --max-displacement 50 --tif-compress=NONE --save-inv-transformed-reference-points --threads 24 -o ${CORRECTED_DIR}/${name} --csv-proj4 "$CSVPROJECTION" --csv-format "$CSVFORMAT" ${file} $CSVDATA
+done
+echo "== Stage 1 Complete =="
+
+cd ${DEM_PATH}/${CORRECTED_DIR}
+
+#list files with a trans.tif to list
+ls *trans_reference.tif | cut -d"." -f1 > trans_list
+cat trans_list | cut -d"_" -f1-5 > trans_root_list
+
+#premtively remove any existing pc align list
+rm pc_file_list_${PC_NAME}
+
+echo "Identifying Successful pc_align Runs"
+
+#copy all the successful dem 8m files to corrected subdirectory
+for file_root in $(cat trans_root_list) ; do
+	ls ${DEM_PATH}/${CORRECTED_DIR}/${file_root}*pc_align-*.txt >> pc_file_list_${PC_NAME}
+	cp pc_file_list_${PC_NAME} ${DEM_PATH}
+done
+
+cd ${DEM_PATH}
+
+echo "== Stage 2 - Applying Inverse Geotransform =="
+
+#apply translation to succesful dem files in /CORR*/succesful/
+for infile in $(cat pc_file_list_${PC_NAME}) ; do
+       	echo "applying translation to " $infile
+	filename=$(echo $infile | awk -F/ '{print $NF}')
+       	dem_root=$(echo $infile | cut -d"-" -f1)
+       	dem_filename=${dem_root}.tif
+       	dem_filename_shean=${dem_root}_${PC_NAME}_trans.tif
+	python ${DEMCOREG_CODE} ${dem_filename} ${infile} ${PC_NAME}
+
+
+	#sample the dem to 30m for visualization purposes.
+	gdalwarp -tr 30 30 -r bilinear ${dem_filename_shean} ${dem_root}_${PC_NAME}_trans_30.tif
+        
+	# run compression over the 30 m files        
+        gdal_translate -co "COMPRESS=LZW" -co bigtiff=if_safer ${dem_root}_${PC_NAME}_trans_30.tif ${dem_root}_${PC_NAME}_trans_30m.tif
+	# run compression over the native res files
+        gdal_translate -co "COMPRESS=LZW" -co bigtiff=if_safer ${dem_root}_${PC_NAME}_trans.tif ${dem_root}_${PC_NAME}_tran.tif
+done
+
+echo "== Stage 2 Complete =="
+
+#remove uncompressed files
+rm *trans_30.tif
+rm *trans.tif
+
+#rename back to trans.tif 
+# check if this is spaces or slashes (redhat?)
+rename tran.tif trans.tif *tran.tif
+
+#check if corrected files directory exists (check if needs to be full path or not)
+if [ ! -d "CORRECTED_DEMS" ] ; then
+	mkdir "CORRECTED_DEMS"
+fi
+
+cd ${DEM_PATH}/CORRECTED_DEMS/
+
+# copy translated files to directory
+mv ${DEM_PATH}/*${PC_NAME}_trans*.tif ${DEM_PATH}/CORRECTED_DEMS/
+
+#make subdirectory and move them to correct one
+mkdir $DEM_PATH}/CORRECTED_DEMS/${PC_NAME}
+mv ${DEM_PATH}/CORRECTED_DEMS/*${PC_NAME}_trans*.tif ${DEM_PATH}/CORRECTED_DEMS/${PC_NAME}
+
+echo "=== Script Complete ==="
