@@ -33,6 +33,8 @@ module load python/2.7.11
 pc_directory=$(cat /projects/jaha2600/demcoregister/genjobs.input | cut -d" " -f1)
 year=$(cat /projects/jaha2600/demcoregister/genjobs.input | cut -d" " -f2)
 dem_file_ending=$(cat /projects/jaha2600/demcoregister/genjobs.input | cut -d" " -f3)
+dem_path_root=$(cat /projects/jaha2600/demcoregister/genjobs.input | cut -d" " -f4)
+
 #read in template file
 template_file='/projects/jaha2600/demcoregister/template_file.txt'
 user=`id -u -n`
@@ -61,6 +63,7 @@ for filename in $(cat pc_file_list | cut -d"." -f1) ; do
     sed -i -e "s|PC_FILENAME|${filename}|g" $jobfilename
     sed -i -e "s|YEARS|${year}|g" $jobfilename
     sed -i -e "s|DEM_ENDING|${dem_file_ending}|g" $jobfilename
+    sed -i -e "s|DEM_PATH|${dem_path_root}|g" $jobfilename
 done < "$template_file"
 
 echo "script complete" 
