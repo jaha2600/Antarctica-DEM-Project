@@ -8,17 +8,17 @@ See main directory for dependency requirements.
 First make sure you have copied the apply_inv_translation.py script into your demcoreg_directory
 
 Then edit `coregister_dems.sh` file
-Change `line 15` and `line 17` to match your ASP path and location of apply_inv_translation.py
+- Change `line 15` and `line 17` to match your ASP path and location of apply_inv_translation.py
 
-Change `line 22` to hardcode the path to your `$PC_NAME` input.
+- Change `line 22` to hardcode the path to your `$PC_NAME` input.
 
-Change `line 25` to proj string that matches the projection of your input point cloud file
-- see example of point cloud format in file `example_point_cloud.csv`
+- Change `line 25` to proj string that matches the projection of your input point cloud file
+  - see example of point cloud format in file `example_point_cloud.csv`
 
-Change `line 30` to ensure `$DEM_NAME_ENDING` matches your file endings (used for wildcards)
-- for most produced WV dems this is normally dem.tif
+- Change `line 30` to ensure `$DEM_NAME_ENDING` matches your file endings (used for wildcards)
+  - for most produced WV dems this is normally dem.tif
 
-Change `line 32` to the dem directory path **** without the end slash ****
+- Change `line 32` to the dem directory path **** without the end slash ****
 
 ## Usage
 Run in directory which contains DEMs to coregister. 
