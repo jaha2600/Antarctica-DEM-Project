@@ -18,7 +18,7 @@ conda activate pygeo
 CODE=/projects/miwi7950/ASP/StereoPipeline-2.6.0-2017-06-01-x86_64-Linux/bin/
 #location of DEMCOREG code
 
-DEMCOREG_CODE=/projects/jaha2600/software/anaconda/envs/pygeo/lib/python2.7/site-packages/demcoreg/apply_dem_translation.py
+DEMCOREG_CODE=/projects/jaha2600/software/anaconda/envs/pygeo/lib/python2.7/site-packages/demcoreg/apply_dem_inv_translation.py
 #location of reference CSV file
 
 CSVPROJECTION='+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs'
