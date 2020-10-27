@@ -48,27 +48,26 @@ For example:
 
 `line 24` change to proj string for csv file
 
-`line 36` change path to dem directory above year to correct path (i.e. `/scratch/summit/jaha2600/antarctica_dems`) Omit last slash.
 
 #### `generate_jobs.sh`
 `lines 1 - 20` edit to required number of tasks, account, walltime (keep low)
 
-`lines 33 - 35` edit to path of the genjobs.input file (keep `| cut -d" " -f1/2` unedited)
+`lines 33 - 36` edit to path of the genjobs.input file (keep `| cut -d" " -f1/2` unedited)
 
-`lines 37` edit to location of `template_file.txt`
+`lines 39` edit to location of `template_file.txt`
 
-`line 41` change path to location of generate_jobs.sh etc. scripts, then add `/jobfiles/` onto the end i.e. `/projects/jaha2600/demcoregister/jobfiles/`
+`line 43` change path to location of generate_jobs.sh etc. scripts, then add `/jobfiles/` onto the end i.e. `/projects/jaha2600/demcoregister/jobfiles/`
 
 
 ## Usage
 1. move all files to correct locations detailed in File Locations Section
 2. make edits to `template_file.txt` and `generate_jobs.sh` files (changing users, slurm commands, paths, dems endings)
 - only needs to be done once if same structure / naming conventions is maintained for multiple jobs
-3. edit `genjobs.input` file, format is three column file with space as delimiter:
+3. edit `genjobs.input` file, format is four column file with space as delimiter:
 ```
-/path/to/pointcloud/ year dem_ending
-For Example:
-/scratch/summit/jaha2600/pc_align_point_clouds/ 2011 dem.tif
+/path/to/pointcloud/ year dem_ending /path/to/dems/
+Make sure paths have trailing /. For Example:
+/scratch/summit/jaha2600/pc_align_point_clouds/ 2011 dem.tif /scratch/summit/jaha2600/ant_dems_2020/
 ```
 4. log into scompile node if you haven't already `ssh scompile`
 5. move to directory with genjobs.input etc in and run `generate_jobs.sh`. This produces a subdirectory called jobfiles, inside of which are multiple qsub files, currently set up as one for each pointcloud in the year specified. If you are using one point cloud you will have one qsub file.
