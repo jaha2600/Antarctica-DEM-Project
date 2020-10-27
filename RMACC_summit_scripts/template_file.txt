@@ -9,6 +9,10 @@
 #SBATCH  --account ucb-summit-mjw
 ## set walltime
 #SBATCH --time=12:00:00
+## set email to send at end of job
+#SBATCH --mail-user=jaha2600@colorado.edu
+#SBATCH --mail-type=END
+
 ## Import modules
 module purge
 source /curc/sw/anaconda/default
