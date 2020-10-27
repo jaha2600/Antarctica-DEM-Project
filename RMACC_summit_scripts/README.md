@@ -40,13 +40,13 @@ For example:
 ```
 ### Once all files are in the correct location make following changes to files to specify your usernames / paths etc:
 #### `template_file.txt`
-`Lines 1 - 12` edit to required number of tasks, account, walltime (note does not currently support multiple nodes - leave at 1)
+`Lines 1 - 14` edit to required number of tasks, account, email, walltime (note does not currently support multiple nodes - leave at 1)
 
-`Line 18` path to copy of ASP
+`Line 22` path to copy of ASP
 
-`Line 21` path to demcoreg apply inverse translation code
+`Line 25` path to demcoreg apply inverse translation code
 
-`line 24` change to proj string for csv file
+`line 28` change to proj string for csv file
 
 
 #### `generate_jobs.sh`
