@@ -22,7 +22,7 @@ Codes require installation of:
 - Modified version of demcoreg apply_dem_translation.py script
   - provided in coreg_dems respository as apply_dem_inv_translation.py 
   - copy this script to the same location as the original apply_dem_translation.py script in demcoreg installation
-  - i.e. /location_of_demcoreg_install/demcoreg/demcoreg/
+  - i.e. /location_of_demcoreg_install/demcoreg/
 
 ## Use in Publication
 If used in publication please credit Jasmine Hansen and github repo https://github.com/jaha2600/coreg_dems 
