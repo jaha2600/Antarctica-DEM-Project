@@ -29,15 +29,15 @@ YEAR=YEARS
 PC_PATH=PC_PATH_NAME
 PC_NAME=PC_FILENAME
 DEM_NAME_ENDING=DEM_ENDING
-DEM_PATH_ROOT=DEM_PATH
+DEM_LOC_ROOT=DEM_PATH
 
 #combine to get the path and filename of the csv file of interest.
 CSVDATA=${PC_PATH}${PC_NAME}.csv
 CORRECTED_DIR="CORRECTED_${PC_NAME}"
 #make sure this path does not have the end slash.
-DEM_PATH_FINAL=${DEM_PATH_ROOT}${YEAR}
+DEM_LOC_FINAL=${DEM_PATH_ROOT}${YEAR}
 
-cd ${DEM_PATH_FINAL}
+cd ${DEM_LOC_FINAL}
 
 ls *${DEM_NAME_ENDING} > list
 
@@ -50,7 +50,7 @@ for file in $(cat list) ; do
 done
 echo "== Stage 1 Complete =="
 
-cd ${DEM_PATH_FINAL}/${CORRECTED_DIR}
+cd ${DEM_LOC_FINAL}/${CORRECTED_DIR}
 
 #list files with a trans.tif to list
 ls *trans_reference.tif | cut -d"." -f1 > trans_list
@@ -63,11 +63,11 @@ echo "Identifying Successful pc_align Runs"
 
 #copy all the successful dem 8m files to corrected subdirectory
 for file_root in $(cat trans_root_list) ; do
-	ls ${DEM_PATH_FINAL}/${CORRECTED_DIR}/${file_root}*pc_align-*.txt >> pc_file_list_${PC_NAME}
-	cp pc_file_list_${PC_NAME} ${DEM_PATH_FINAL}
+	ls ${DEM_LOC_FINAL}/${CORRECTED_DIR}/${file_root}*pc_align-*.txt >> pc_file_list_${PC_NAME}
+	cp pc_file_list_${PC_NAME} ${DEM_PLOC_FINAL}
 done
 
-cd ${DEM_PATH_FINAL}
+cd ${DEM_LOC_FINAL}
 
 echo "== Stage 2 - Applying Inverse Geotransform =="
 
@@ -104,11 +104,11 @@ rename tran.tif trans.tif *tran.tif
 if [ ! -d "CORRECTED_DEMS" ] ; then
 	mkdir "CORRECTED_DEMS"
 fi
-mkdir ${DEM_PATH_FINAL}/CORRECTED_DEMS/${PC_NAME}/
+mkdir ${DEM_LOC_FINAL}/CORRECTED_DEMS/${PC_NAME}/
 # copy translated files to directory
 ls 20*${PC_NAME}_trans*.tif > filelist
 for file in $(cat filelist) ; do
-        mv $DEM_PATH_FINAL/${file} $DEM_PATH_FINAL/CORRECTED_DEMS/$PC_NAME/
+        mv $DEM_LOC_FINAL/${file} $DEM_LOC_FINAL/CORRECTED_DEMS/$PC_NAME/
 done
 rm filelist
 
