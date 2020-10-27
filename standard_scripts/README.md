@@ -5,9 +5,9 @@ See main directory for dependency requirements.
 
 ## Make Edits to Paths & Hardcoded Variables
 
-First make sure you have copied the apply_inv_translation.py script into your demcoreg_directory 
-
-Change `line 14` and `line 17` to match your ASP path and location of apply_inv_translation.py
+First make sure you have copied the apply_inv_translation.py script into your demcoreg_directory
+Then edit `coregister_dems.sh` file
+Change `line 15` and `line 17` to match your ASP path and location of apply_inv_translation.py
 
 Change `line 22` to hardcode the path to your `$PC_NAME` input.
 
