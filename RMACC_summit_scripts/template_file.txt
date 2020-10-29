@@ -96,13 +96,7 @@ done
 
 echo "== Stage 2 Complete =="
 
-#remove uncompressed files
-rm *trans_30.tif
-rm *trans.tif
-
-#rename back to trans.tif 
-# check if this is spaces or slashes (redhat?)
-rename tran.tif trans.tif *tran.tif
+echo "== Tidying and Moving Files =="
 
 #check if corrected files directory exists (check if needs to be full path or not)
 if [ ! -d "CORRECTED_DEMS" ] ; then
@@ -110,10 +104,19 @@ if [ ! -d "CORRECTED_DEMS" ] ; then
 fi
 mkdir ${DEM_LOC_FINAL}/CORRECTED_DEMS/${PC_NAME}/
 # copy translated files to directory
-ls 20*${PC_NAME}_trans*.tif > filelist
+ls 20*${PC_NAME}_tran*.tif > filelist
 for file in $(cat filelist) ; do
         mv $DEM_LOC_FINAL/${file} $DEM_LOC_FINAL/CORRECTED_DEMS/$PC_NAME/
 done
 rm filelist
+
+cd $DEM_LOC_FINAL/CORRECTED_DEMS/$PC_NAME/
+#remove uncompressed files
+rm *trans_30.tif
+rm *trans.tif
+
+#rename back to trans.tif 
+# check if this is spaces or slashes (redhat?)
+rename tran.tif trans.tif *tran.tif
 
 echo "=== Script Complete ==="
